@@ -9,7 +9,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('ShelfDiver-API')
-    .setDescription('Back-end API for the ShelfDiver app.')
+    .setDescription('Back-end API for the ShelfDiver app, built with NestJS.')
     .setVersion('1.0')
     .addBearerAuth()
     .build()
