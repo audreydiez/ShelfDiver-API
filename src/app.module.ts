@@ -6,6 +6,7 @@ import { AppService } from './app.service'
 
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { join } from 'path'
+import { UsersModule } from './users/users.module'
 
 @Module({
   imports: [
@@ -20,11 +21,11 @@ import { join } from 'path'
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
         entities: [join(process.cwd(), 'dist/**/*.entity.js')],
-        synchronize: false,
-        autoLoadEntities: true,
+        synchronize: true,
       }),
       inject: [ConfigService],
     }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
