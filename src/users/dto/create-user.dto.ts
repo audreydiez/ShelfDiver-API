@@ -30,10 +30,10 @@ export class CreateUserDto {
   @IsOptional()
   lastname: string
 
-  @IsEnum(['ADMIN', 'CONTRIBUTEUR'], {
+  @IsEnum(['ADMIN', 'CONTRIBUTOR'], {
     message: 'Valid role required',
   })
-  role: 'ADMIN' | 'CONTRIBUTEUR'
+  role: 'ADMIN' | 'CONTRIBUTOR' = 'CONTRIBUTOR'
 
   @IsDate()
   @IsOptional()

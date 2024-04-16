@@ -3,9 +3,10 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm'
 
-@Entity('users')
+@Entity()
 export class Users {
   @PrimaryGeneratedColumn()
   id: number
@@ -22,7 +23,12 @@ export class Users {
   @Column({ type: 'varchar', length: 50, nullable: true })
   lastname: string
 
-  @Column({ type: 'varchar', length: 15, nullable: false })
+  @Column({
+    type: 'varchar',
+    length: 15,
+    nullable: false,
+    default: 'CONTRIBUTOR',
+  })
   role: string
 
   @CreateDateColumn({ type: 'datetime' })
@@ -31,7 +37,7 @@ export class Users {
   @Column({ type: 'int', nullable: false })
   created_by: number
 
-  @CreateDateColumn({ type: 'datetime' })
+  @UpdateDateColumn({ type: 'datetime' })
   updated_at: Date
 
   @Column({ type: 'int', nullable: true })
