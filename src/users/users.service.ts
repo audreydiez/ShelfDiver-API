@@ -13,11 +13,13 @@ export class UsersService {
     private usersRepository: Repository<Users>,
   ) {}
 
+  // Find all users in database.
   async findAll(): Promise<Users[]> {
     const allUsers = await this.usersRepository.find()
     return allUsers
   }
 
+  //Find one user in database using its id.
   async findOne(id: number): Promise<Users> {
     const userById = await this.usersRepository.findOneBy({ id })
     if (!userById) {
