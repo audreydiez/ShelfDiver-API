@@ -58,6 +58,7 @@ export class UsersController {
         HttpStatus.FORBIDDEN,
       )
     }
+    createUserDto.created_by = req.user.user_id
     return this.usersService.create(createUserDto)
   }
 
@@ -77,8 +78,10 @@ export class UsersController {
       req.user.user_role === 'CONTRIBUTOR' &&
       req.user.user_id === id
     ) {
+      updateUserDto.updated_by = req.user.user_id
       return this.usersService.update(id, updateUserDto)
     } else if (req.user.user_role === 'ADMIN') {
+      updateUserDto.updated_by = req.user.user_id
       return this.usersService.update(id, updateUserDto)
     }
   }

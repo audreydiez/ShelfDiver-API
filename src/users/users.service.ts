@@ -5,6 +5,7 @@ import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { Users } from './users.entity'
 import * as bcrypt from 'bcrypt'
+import { randomString } from 'helpers'
 
 @Injectable()
 export class UsersService {
@@ -36,12 +37,13 @@ export class UsersService {
     const salt = await bcrypt.genSalt()
     const hashedPassword = await bcrypt.hash(createUserDto.password, salt)
 
-    const newUser = {
+    const newUser = this.usersRepository.create({
       ...createUserDto,
       password: hashedPassword,
-    }
+    })
 
     await this.usersRepository.save(newUser)
+    console.log(newUser)
 
     return newUser
   }
@@ -79,6 +81,33 @@ export class UsersService {
         'No such user found in Database',
         HttpStatus.NOT_FOUND,
       )
+    }
+  }
+
+  async createDefaultUser() {
+    const count = await this.usersRepository
+      .createQueryBuilder('users')
+      .getCount()
+
+    if (!count) {
+      const defaultAdmin = {
+        email: 'admin@mail.com',
+        password: randomString(16),
+        role: 'ADMIN',
+      }
+
+      const user = await this.create({
+        email: defaultAdmin.email,
+        password: defaultAdmin.password,
+        role: defaultAdmin.role,
+      })
+
+      console.log(
+        `Default admin created. Email: ${defaultAdmin.email} - Password: ${defaultAdmin.password}`,
+      )
+      console.log(user)
+
+      await this.usersRepository.save(user)
     }
   }
 }
