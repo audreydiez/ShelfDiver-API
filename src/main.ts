@@ -14,7 +14,16 @@ async function bootstrap() {
     .setTitle('ShelfDiver-API')
     .setDescription('Back-end API for the ShelfDiver app, built with NestJS.')
     .setVersion('1.0')
-    .addBearerAuth()
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'Bearer',
+        bearerFormat: 'Bearer',
+        name: 'Authorization',
+        in: 'Header',
+      },
+      'token',
+    )
     .build()
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('swagger', app, document)

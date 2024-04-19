@@ -31,7 +31,8 @@ export class CreateUserDto {
   lastname?: string
 
   @IsString()
-  role: string
+  @IsOptional()
+  role?: string
 
   @IsDate()
   @IsOptional()
