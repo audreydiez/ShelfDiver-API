@@ -4,6 +4,8 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm'
 
 @Entity()
@@ -11,7 +13,7 @@ export class Users {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column({ type: 'varchar', length: 255, nullable: false })
+  @Column({ type: 'varchar', length: 255, nullable: false, unique: true })
   email: string
 
   @Column({ type: 'varchar', length: 255, nullable: false })
@@ -34,12 +36,14 @@ export class Users {
   @CreateDateColumn({ type: 'datetime' })
   created_at: Date
 
-  @Column({ type: 'int', nullable: false })
-  created_by: number
+  @ManyToOne(() => Users, (user) => user.created_by)
+  @JoinColumn({ name: 'created_by', foreignKeyConstraintName: 'user_id' })
+  created_by: Users
 
   @UpdateDateColumn({ type: 'datetime' })
   updated_at: Date
 
-  @Column({ type: 'int', nullable: true })
-  updated_by: number
+  @ManyToOne(() => Users, (user) => user.updated_by)
+  @JoinColumn({ name: 'updated_by', foreignKeyConstraintName: 'user_id_2' })
+  updated_by: Users
 }

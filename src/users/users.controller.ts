@@ -17,8 +17,10 @@ import { UsersService } from './users.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard'
+import { ApiBearerAuth } from '@nestjs/swagger'
 
 @Controller('users')
+@ApiBearerAuth('token')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -58,6 +60,7 @@ export class UsersController {
         HttpStatus.FORBIDDEN,
       )
     }
+    createUserDto.created_by = req.user.user_id
     return this.usersService.create(createUserDto)
   }
 
@@ -77,8 +80,10 @@ export class UsersController {
       req.user.user_role === 'CONTRIBUTOR' &&
       req.user.user_id === id
     ) {
+      updateUserDto.updated_by = req.user.user_id
       return this.usersService.update(id, updateUserDto)
     } else if (req.user.user_role === 'ADMIN') {
+      updateUserDto.updated_by = req.user.user_id
       return this.usersService.update(id, updateUserDto)
     }
   }

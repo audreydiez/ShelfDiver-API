@@ -1,18 +1,18 @@
 import {
   IsDate,
   IsEmail,
-  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
   IsStrongPassword,
 } from 'class-validator'
+import { Users } from '../users.entity'
 
 export class CreateUserDto {
   @IsNumber()
   @IsOptional()
-  id: number
+  id?: number
 
   @IsEmail()
   @IsNotEmpty()
@@ -24,30 +24,29 @@ export class CreateUserDto {
 
   @IsString()
   @IsOptional()
-  firstname: string
+  firstname?: string
 
   @IsString()
   @IsOptional()
-  lastname: string
+  lastname?: string
 
-  @IsEnum(['ADMIN', 'CONTRIBUTOR'], {
-    message: 'Valid role required',
-  })
-  role: 'ADMIN' | 'CONTRIBUTOR' = 'CONTRIBUTOR'
+  @IsString()
+  @IsOptional()
+  role?: string
 
   @IsDate()
   @IsOptional()
-  created_at: Date
+  created_at?: Date
 
   @IsNumber()
   @IsOptional()
-  created_by: number
+  created_by?: Users
 
   @IsDate()
   @IsOptional()
-  updated_at: Date
+  updated_at?: Date
 
   @IsNumber()
   @IsOptional()
-  updated_by: number
+  updated_by?: Users
 }
