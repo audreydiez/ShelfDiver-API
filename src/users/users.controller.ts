@@ -17,10 +17,11 @@ import { UsersService } from './users.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard'
-import { ApiBearerAuth } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
 @Controller('users')
 @ApiBearerAuth('token')
+@ApiTags('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -39,16 +40,13 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get('user/:id')
   findOne(@Request() req, @Param('id', ParseIntPipe) id: number) {
-    if (req.user.user_role === 'CONTRIBUTOR' && req.user.user_id === id) {
-      return this.usersService.findOne(id)
-    } else if (req.user.user_role === 'CONTRIBUTOR' && req.user.user_id != id) {
+    if (req.user.user_role != 'ADMIN') {
       throw new HttpException(
         'Invalid authentication level',
         HttpStatus.FORBIDDEN,
       )
-    } else if (req.user.user_role === 'ADMIN') {
-      return this.usersService.findOne(id)
     }
+    return this.usersService.findOne(id)
   }
 
   @UseGuards(JwtAuthGuard)
@@ -71,21 +69,13 @@ export class UsersController {
     @Body(ValidationPipe) updateUserDto: UpdateUserDto,
     @Request() req,
   ) {
-    if (req.user.user_role === 'CONTRIBUTOR' && req.user.user_id != id) {
+    if (req.user.user_role != 'ADMIN') {
       throw new HttpException(
         'Invalid authentication level',
         HttpStatus.FORBIDDEN,
       )
-    } else if (
-      req.user.user_role === 'CONTRIBUTOR' &&
-      req.user.user_id === id
-    ) {
-      updateUserDto.updated_by = req.user.user_id
-      return this.usersService.update(id, updateUserDto)
-    } else if (req.user.user_role === 'ADMIN') {
-      updateUserDto.updated_by = req.user.user_id
-      return this.usersService.update(id, updateUserDto)
     }
+    return this.usersService.update(id, updateUserDto)
   }
 
   @UseGuards(JwtAuthGuard)

@@ -58,13 +58,16 @@ export class UsersService {
       )
     }
 
-    const salt = await bcrypt.genSalt()
-    const hashedPassword = await bcrypt.hash(updateUserDto.password, salt)
-
-    Object.assign(userToUpdate, {
-      ...updateUserDto,
-      password: hashedPassword,
-    })
+    if (updateUserDto.password) {
+      const salt = await bcrypt.genSalt()
+      const hashedPassword = await bcrypt.hash(updateUserDto.password, salt)
+      Object.assign(userToUpdate, {
+        ...updateUserDto,
+        password: hashedPassword,
+      })
+    } else {
+      Object.assign(userToUpdate, updateUserDto)
+    }
 
     await this.usersRepository.save(userToUpdate)
 
@@ -84,6 +87,7 @@ export class UsersService {
     }
   }
 
+  // Creates a default ADMIN user if there are not any users in DB.
   async createDefaultUser() {
     const count = await this.usersRepository
       .createQueryBuilder('users')
