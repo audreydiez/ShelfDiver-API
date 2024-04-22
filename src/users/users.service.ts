@@ -14,13 +14,13 @@ export class UsersService {
     private usersRepository: Repository<Users>,
   ) {}
 
-  // Find all users in database.
+  // Finds all users in database.
   async findAll(): Promise<Users[]> {
     const allUsers = await this.usersRepository.find()
     return allUsers
   }
 
-  //Find one user in database using its id.
+  //Finds one user in database using its id.
   async findOne(id: number): Promise<Users> {
     const userById = await this.usersRepository.findOneBy({ id })
     if (!userById) {
@@ -33,6 +33,7 @@ export class UsersService {
     return userById
   }
 
+  // Creates a new user.
   async create(createUserDto: CreateUserDto): Promise<Users> {
     const salt = await bcrypt.genSalt()
     const hashedPassword = await bcrypt.hash(createUserDto.password, salt)
@@ -48,6 +49,7 @@ export class UsersService {
     return newUser
   }
 
+  // Update an existing user using its id.
   async update(id: number, updateUserDto: UpdateUserDto): Promise<Users> {
     const userToUpdate = await this.usersRepository.findOne({ where: { id } })
 
@@ -58,19 +60,24 @@ export class UsersService {
       )
     }
 
-    const salt = await bcrypt.genSalt()
-    const hashedPassword = await bcrypt.hash(updateUserDto.password, salt)
-
-    Object.assign(userToUpdate, {
-      ...updateUserDto,
-      password: hashedPassword,
-    })
+    // If a new password is provided, hashes it before saving it.
+    if (updateUserDto.password) {
+      const salt = await bcrypt.genSalt()
+      const hashedPassword = await bcrypt.hash(updateUserDto.password, salt)
+      Object.assign(userToUpdate, {
+        ...updateUserDto,
+        password: hashedPassword,
+      })
+    } else {
+      Object.assign(userToUpdate, updateUserDto)
+    }
 
     await this.usersRepository.save(userToUpdate)
 
     return userToUpdate
   }
 
+  // Deletes an user using its id.
   async delete(id: number): Promise<void> {
     const userToDelete = await this.usersRepository.findOne({
       where: { id },
@@ -84,11 +91,14 @@ export class UsersService {
     }
   }
 
+  // Creates a default ADMIN user if there are not any users in DB.
   async createDefaultUser() {
+    // Checks if there is any user stored in DB.
     const count = await this.usersRepository
       .createQueryBuilder('users')
       .getCount()
 
+    // If no users are stored in DB, creates one using a placeholder email and a randomized password.
     if (!count) {
       const defaultAdmin = {
         email: 'admin@mail.com',
@@ -102,6 +112,7 @@ export class UsersService {
         role: defaultAdmin.role,
       })
 
+      // Returns the credentials needed to access the dashboard.
       console.log(
         `Default admin created. Email: ${defaultAdmin.email} - Password: ${defaultAdmin.password}`,
       )

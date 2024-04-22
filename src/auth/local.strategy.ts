@@ -9,6 +9,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     super({ usernameField: 'email' })
   }
 
+  // Checks if the credentials provided from the login route are valid.
   async validate(email: string, password: string): Promise<any> {
     const user = await this.authService.validateUser(email, password)
     if (!user) {

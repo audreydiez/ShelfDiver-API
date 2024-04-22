@@ -14,6 +14,8 @@ async function bootstrap() {
     .setTitle('ShelfDiver-API')
     .setDescription('Back-end API for the ShelfDiver app, built with NestJS.')
     .setVersion('1.0')
+    .addTag('auth')
+    .addTag('users')
     .addBearerAuth(
       {
         type: 'http',
