@@ -13,6 +13,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     })
   }
 
+  // Returns the core of what the JWT must contain.
   async validate(payload: any) {
     return {
       user_id: payload.userId,

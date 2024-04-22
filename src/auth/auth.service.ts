@@ -13,6 +13,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
+  // Returns the user found in DB with matching credentials, for the JWT generation.
   async validateUser(email: string, pass: string): Promise<Users> {
     const user = await this.usersRepository.findOneBy({ email })
 
@@ -29,6 +30,7 @@ export class AuthService {
     }
   }
 
+  // Signs and generate the JWT with the adequate user informations.
   async login(user: any) {
     const payload = {
       username: user.firstname,
@@ -40,6 +42,7 @@ export class AuthService {
     }
   }
 
+  // Checks if the provided JWT is valid and returns the user's role from it.
   verifyToken(token: string) {
     try {
       const decodedToken = this.jwtService.verify(token)

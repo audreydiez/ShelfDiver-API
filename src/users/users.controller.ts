@@ -25,6 +25,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  // Gets all the users stored in DB. Must be a logged in ADMIN to access this route.
   @UseGuards(JwtAuthGuard)
   @Get('all_users')
   findAll(@Request() req) {
@@ -37,6 +38,7 @@ export class UsersController {
     return this.usersService.findAll()
   }
 
+  // Gets a single user stored in DB using its ID as a param. Must be a logged in ADMIN to access this route.
   @UseGuards(JwtAuthGuard)
   @Get('user/:id')
   findOne(@Request() req, @Param('id', ParseIntPipe) id: number) {
@@ -49,6 +51,7 @@ export class UsersController {
     return this.usersService.findOne(id)
   }
 
+  // Creates a new user. Must be a logged in ADMIN to access this route.
   @UseGuards(JwtAuthGuard)
   @Post('create')
   create(@Request() req, @Body(ValidationPipe) createUserDto: CreateUserDto) {
@@ -62,6 +65,7 @@ export class UsersController {
     return this.usersService.create(createUserDto)
   }
 
+  // Updates an existing user using its ID as a param. Must be a logged in ADMIN to access this route.
   @UseGuards(JwtAuthGuard)
   @Patch('update/:id')
   update(
@@ -78,6 +82,7 @@ export class UsersController {
     return this.usersService.update(id, updateUserDto)
   }
 
+  // Deletes an user using its ID as a param. Must be a logged in ADMIN to access this route.
   @UseGuards(JwtAuthGuard)
   @Delete('delete/:id')
   delete(@Request() req, @Param('id', ParseIntPipe) id: number) {

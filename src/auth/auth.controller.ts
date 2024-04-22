@@ -9,6 +9,7 @@ import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger'
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  // Login route using an email and a password as credentials.
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @ApiBody({
@@ -24,6 +25,7 @@ export class AuthController {
     return this.authService.login(req.user)
   }
 
+  // Returns the user bound to the JWT from the DB. Must be logged in to access this route.
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('token')
   @Get('profile')
