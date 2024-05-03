@@ -104,12 +104,16 @@ export class UsersService {
         email: 'admin@mail.com',
         password: randomString(16),
         role: 'ADMIN',
+        firstname: 'John',
+        lastname: 'Doe',
       }
 
       const user = await this.create({
         email: defaultAdmin.email,
         password: defaultAdmin.password,
         role: defaultAdmin.role,
+        firstname: defaultAdmin.firstname,
+        lastname: defaultAdmin.lastname,
       })
 
       // Returns the credentials needed to access the dashboard.

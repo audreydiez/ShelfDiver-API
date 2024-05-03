@@ -23,12 +23,10 @@ export class CreateUserDto {
   password: string
 
   @IsString()
-  @IsOptional()
-  firstname?: string
+  firstname: string
 
   @IsString()
-  @IsOptional()
-  lastname?: string
+  lastname: string
 
   @IsString()
   @IsOptional()
