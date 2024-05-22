@@ -8,6 +8,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { join } from 'path'
 import { UsersModule } from './users/users.module'
 import { AuthModule } from './auth/auth.module'
+import { ProductsModule } from './products/products.module'
+import { MulterModule } from '@nestjs/platform-express'
 
 @Module({
   imports: [
@@ -28,6 +30,12 @@ import { AuthModule } from './auth/auth.module'
     }),
     UsersModule,
     AuthModule,
+    ProductsModule,
+    MulterModule.registerAsync({
+      useFactory: () => ({
+        dest: './uploads/images',
+      }),
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

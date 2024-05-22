@@ -89,6 +89,12 @@ export class UsersService {
         HttpStatus.NOT_FOUND,
       )
     }
+    if (userToDelete.role === 'ADMIN') {
+      throw new HttpException(
+        'Cannot delete an ADMIN user!',
+        HttpStatus.FORBIDDEN,
+      )
+    }
   }
 
   // Creates a default ADMIN user if there are not any users in DB.
