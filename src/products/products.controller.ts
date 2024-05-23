@@ -148,17 +148,20 @@ export class ProductsController {
       return this.productsService.update(id, updateProductDto)
     }
 
-    const imageName = this.findOne(id)
-    const imagePath = join(
-      process.cwd(),
-      'uploads',
-      'images',
-      (await imageName).image,
-    )
-    try {
-      unlinkSync(imagePath)
-    } catch (err) {
-      console.error(`Error deleting image file: ${err}`)
+    const imageName = await this.findOne(id)
+
+    if (imageName.image != null) {
+      const imagePath = join(
+        process.cwd(),
+        'uploads',
+        'images',
+        (await imageName).image,
+      )
+      try {
+        unlinkSync(imagePath)
+      } catch (err) {
+        console.error(`Error deleting image file: ${err}`)
+      }
     }
 
     const tempFilePath = file.path

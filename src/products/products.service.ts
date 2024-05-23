@@ -44,7 +44,7 @@ export class ProductsService {
     return newProduct
   }
 
-  // Update an existing user using its id.
+  // Update an existing product using its id.
   async update(
     id: number,
     updateProductDto: UpdateProductDto,
@@ -67,7 +67,7 @@ export class ProductsService {
     return productToUpdate
   }
 
-  // Deletes an user using its id.
+  // Deletes a product using its id.
   async delete(id: number): Promise<void> {
     const productToDelete = await this.productsRepository.findOne({
       where: { id },
