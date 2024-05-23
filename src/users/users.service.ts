@@ -5,7 +5,7 @@ import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { Users } from './users.entity'
 import * as bcrypt from 'bcrypt'
-import { randomString } from 'helpers'
+import { randomString } from '../helpers'
 
 @Injectable()
 export class UsersService {
@@ -87,6 +87,12 @@ export class UsersService {
       throw new HttpException(
         'No such user found in Database',
         HttpStatus.NOT_FOUND,
+      )
+    }
+    if (userToDelete.role === 'ADMIN') {
+      throw new HttpException(
+        'Cannot delete an ADMIN user!',
+        HttpStatus.FORBIDDEN,
       )
     }
   }
