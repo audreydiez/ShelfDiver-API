@@ -189,13 +189,19 @@ export class ProductsController {
   @UseGuards(JwtAuthGuard)
   @Delete('delete/:id')
   async delete(@Param('id', ParseIntPipe) id: number) {
-    const imageName = this.findOne(id)
+    const imageName = await this.findOne(id)
+
+    if (imageName.image === null) {
+      return this.productsService.delete(id)
+    }
+
     const imagePath = join(
       process.cwd(),
       'uploads',
       'images',
       (await imageName).image,
     )
+
     try {
       unlinkSync(imagePath)
     } catch (err) {
