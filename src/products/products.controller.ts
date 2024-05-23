@@ -12,8 +12,9 @@ import {
   Request,
   UseInterceptors,
   UploadedFile,
-  Res,
-  StreamableFile,
+  ParseFilePipe,
+  FileTypeValidator,
+  MaxFileSizeValidator,
 } from '@nestjs/common'
 import { ProductsService } from './products.service'
 import { CreateProductDto } from './dto/create-product.dto'
@@ -23,13 +24,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer'
 import { extname, join } from 'path'
-import {
-  promises as fs,
-  mkdirSync,
-  rmSync,
-  unlinkSync,
-  createReadStream,
-} from 'fs'
+import { promises as fs, mkdirSync, rmSync, unlinkSync } from 'fs'
 import { tmpdir } from 'os'
 
 @Controller('products')
@@ -74,10 +69,23 @@ export class ProductsController {
     }),
   )
   async create(
-    @UploadedFile() file: Express.Multer.File,
     @Request() req,
     @Body(ValidationPipe) createProductDto: CreateProductDto,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new FileTypeValidator({ fileType: /(jpg|jpeg|png|gif)$/ }),
+          new MaxFileSizeValidator({ maxSize: 2 * 1024 * 1024 }),
+        ],
+        fileIsRequired: false,
+      }),
+    )
+    file?: Express.Multer.File,
   ) {
+    if (!file) {
+      return this.productsService.create(createProductDto)
+    }
+
     createProductDto.created_by = req.user.user_id
     const tempFilePath = file.path
 
@@ -126,7 +134,16 @@ export class ProductsController {
     @Param('id', ParseIntPipe) id: number,
     @Request() req,
     @Body(ValidationPipe) updateProductDto: UpdateProductDto,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new FileTypeValidator({ fileType: /(jpg|jpeg|png|gif)$/ }),
+          new MaxFileSizeValidator({ maxSize: 2 * 1024 * 1024 }),
+        ],
+        fileIsRequired: false,
+      }),
+    )
+    file?: Express.Multer.File,
   ) {
     updateProductDto.updated_by = req.user.user_id
     if (!file) {
@@ -185,19 +202,5 @@ export class ProductsController {
       console.error(`Error deleting image file: ${err}`)
     }
     return this.productsService.delete(id)
-  }
-
-  // Fetches an image based on a filename stored in DB.
-  @Get('image/:image')
-  getImage(@Param('image') image: string, @Res({ passthrough: true }) res) {
-    const imagePath = join(process.cwd(), 'uploads', 'images', image)
-    const imageStream = createReadStream(imagePath)
-    const extension = image.split('.').pop()
-    const contentType = `image/${extension}`
-    res.set({
-      'Content-Type': contentType,
-      'Content-Disposition': `inline; filename="${image}"`,
-    })
-    return new StreamableFile(imageStream)
   }
 }

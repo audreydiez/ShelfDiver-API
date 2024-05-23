@@ -5,7 +5,7 @@ import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { Users } from './users.entity'
 import * as bcrypt from 'bcrypt'
-import { randomString } from 'helpers'
+import { randomString } from '../helpers'
 
 @Injectable()
 export class UsersService {
