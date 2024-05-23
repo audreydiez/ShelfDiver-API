@@ -34,14 +34,12 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   // Gets all the products stored in DB.
-  @UseGuards(JwtAuthGuard)
   @Get('all_products')
   findAll() {
     return this.productsService.findAll()
   }
 
   // Gets a single product stored in DB using its ID as a param.
-  // @UseGuards(JwtAuthGuard)
   @Get('product/:id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.productsService.findOne(id)
