@@ -73,6 +73,8 @@ export class UsersController {
     @Body(ValidationPipe) updateUserDto: UpdateUserDto,
     @Request() req,
   ) {
+    updateUserDto.updated_by = req.user.user_id
+
     if (req.user.user_role != 'ADMIN') {
       throw new HttpException(
         'Invalid authentication level',

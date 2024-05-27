@@ -22,7 +22,10 @@ export class UsersService {
 
   //Finds one user in database using its id.
   async findOne(id: number): Promise<Users> {
-    const userById = await this.usersRepository.findOneBy({ id })
+    const userById = await this.usersRepository.findOne({
+      where: { id },
+      relations: ['created_by', 'updated_by'],
+    })
     if (!userById) {
       throw new HttpException(
         'No such user found in Database',

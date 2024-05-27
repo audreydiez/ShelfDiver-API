@@ -66,5 +66,4 @@ export class Products {
     foreignKeyConstraintName: 'product_user_id_2',
   })
   updated_by: Users
-  productImage: any
 }

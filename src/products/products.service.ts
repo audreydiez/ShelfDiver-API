@@ -26,7 +26,10 @@ export class ProductsService {
 
   //Finds one product in database using its id.
   async findOne(id: number): Promise<Products> {
-    const product = await this.productsRepository.findOneBy({ id })
+    const product = await this.productsRepository.findOne({
+      where: { id },
+      relations: ['created_by', 'updated_by'],
+    })
 
     if (!product) {
       throw new HttpException('No such product found', HttpStatus.NOT_FOUND)
