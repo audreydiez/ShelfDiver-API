@@ -43,6 +43,9 @@ export class CreateProductDto {
   @IsNotEmpty()
   energy: string
 
+  @IsOptional()
+  consumption: number
+
   @IsString()
   @IsNotEmpty()
   transmission: string
