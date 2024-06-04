@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS `products` (
   `price` decimal(10,0) NOT NULL,
   `motor_type` varchar(100) DEFAULT NULL,
   `energy` varchar(50) NOT NULL,
+  `consumption` decimal(10,0) DEFAULT NULL,
   `transmission` varchar(50) NOT NULL,
   `power` int DEFAULT NULL,
   `fiscal_power` int DEFAULT NULL,
