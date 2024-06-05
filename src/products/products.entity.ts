@@ -38,6 +38,9 @@ export class Products {
   @Column({ type: 'varchar', length: 50, nullable: false })
   energy: string
 
+  @Column({ type: 'decimal', nullable: true })
+  consumption: number
+
   @Column({ type: 'varchar', length: 50, nullable: false })
   transmission: string
 
