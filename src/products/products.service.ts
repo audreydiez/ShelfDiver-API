@@ -20,8 +20,8 @@ export class ProductsService {
 
   // Finds all products in database.
   async findAll(): Promise<Products[]> {
-    const allUsers = await this.productsRepository.find()
-    return allUsers
+    const allProducts = await this.productsRepository.find()
+    return allProducts
   }
 
   //Finds one product in database using its id.
