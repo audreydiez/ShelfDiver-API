@@ -57,7 +57,7 @@ import * as mysql from 'mysql2/promise'
   providers: [AppService],
 })
 export class AppModule implements OnModuleInit {
-  constructor(private readonly dataSource: DataSource) {}
+  constructor(private dataSource: DataSource) {}
 
   async onModuleInit() {
     try {
