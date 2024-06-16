@@ -61,9 +61,24 @@ export class AppModule implements OnModuleInit {
 
   async onModuleInit() {
     try {
-      // Run migrations
-      await this.dataSource.runMigrations()
-      console.log('Migrations executed successfully.')
+      const queryRunner = this.dataSource.createQueryRunner()
+      await queryRunner.connect()
+
+      const migrationsTableExists = await queryRunner.hasTable('migrations')
+      if (migrationsTableExists) {
+        const migrations = await queryRunner.query(`SELECT * FROM migrations`)
+        if (migrations.length > 0) {
+          console.log('Migrations have already been applied. Skipping...')
+        } else {
+          await this.dataSource.runMigrations()
+          console.log('Migrations executed successfully.')
+        }
+      } else {
+        await this.dataSource.runMigrations()
+        console.log('Migrations executed successfully.')
+      }
+
+      await queryRunner.release()
     } catch (error) {
       console.error('Error during Data Source initialization:', error)
     }
