@@ -32,8 +32,18 @@ export class UsersService {
         HttpStatus.NOT_FOUND,
       )
     }
-
-    return userById
+    // Mapping only the names of the users
+    const { created_by, updated_by, ...rest } = userById
+    const result = {
+      ...rest,
+      created_by: created_by
+        ? { firstname: created_by.firstname, lastname: created_by.lastname }
+        : null,
+      updated_by: updated_by
+        ? { firstname: updated_by.firstname, lastname: updated_by.lastname }
+        : null,
+    }
+    return result as Users
   }
 
   // Creates a new user.
