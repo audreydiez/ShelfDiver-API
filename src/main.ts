@@ -4,17 +4,27 @@ import { AppModule } from './app.module'
 import { UsersService } from './users/users.service'
 import { NestExpressApplication } from '@nestjs/platform-express'
 import { join } from 'path'
+import { ConfigService } from '@nestjs/config'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule)
   const usersService = app.get(UsersService)
+  const configService = app.get(ConfigService)
+  const allowedOrigins = configService
+    .get<string>('CORS_ORIGINS')
+    .split(',')
+    .map((origin) => origin.trim())
 
   app.useStaticAssets(join(__dirname, '..', '..', 'uploads'), {
     prefix: '/uploads/',
   })
 
   app.setGlobalPrefix('api')
-  app.enableCors()
+  app.enableCors({
+    origin: allowedOrigins,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  })
 
   const config = new DocumentBuilder()
     .setTitle('ShelfDiver-API')
