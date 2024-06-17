@@ -13,7 +13,7 @@ This project uses a MySQL Database. I recommend having the latest version of it.
 ## Installation & Running
 
 - Clone the repository on your local machine.
-- Import the `database.sql` file into your MySQL Server.
 - Open the repository in your usual IDE.
+- Follow the `.env.example` file to fill in the environment variables accordingly.
 - Open up a terminal and run `npm install`.
 - When the dependencies are installed, run `npm run start` if you are in production mode or `npm run start:dev` if you are in dev mode.
