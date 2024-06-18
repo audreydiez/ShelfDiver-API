@@ -95,7 +95,6 @@ export class UsersService {
     const userToDelete = await this.usersRepository.findOne({
       where: { id },
     })
-    await this.usersRepository.delete(id)
     if (!userToDelete) {
       throw new HttpException(
         'No such user found in Database',
@@ -108,6 +107,7 @@ export class UsersService {
         HttpStatus.FORBIDDEN,
       )
     }
+    await this.usersRepository.delete(id)
   }
 
   // Creates a default ADMIN user if there are not any users in DB.
