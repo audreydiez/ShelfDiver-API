@@ -6,12 +6,14 @@ import { UpdateUserDto } from './dto/update-user.dto'
 import { Users } from './users.entity'
 import * as bcrypt from 'bcrypt'
 import { randomString } from '../helpers'
+import { ConfigService } from '@nestjs/config'
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(Users)
     private usersRepository: Repository<Users>,
+    private readonly configService: ConfigService,
   ) {}
 
   // Finds all users in database.
@@ -120,7 +122,7 @@ export class UsersService {
     // If no users are stored in DB, creates one using a placeholder email and a randomized password.
     if (!count) {
       const defaultAdmin = {
-        email: 'admin@mail.com',
+        email: this.configService.get('DEFAULT_ADMIN_MAIL'),
         password: randomString(16),
         role: 'ADMIN',
         firstname: 'John',
