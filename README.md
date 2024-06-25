@@ -1,11 +1,15 @@
 # ShelfDiver-API
 Back-end API for the more global Shelfdiver project, which acts as the bridge between database and front-end. Built with NestJS.
 
+Back-end API for the more global Shelfdiver project, which acts as the bridge between database and front-end. Built with NestJS.
+
 ## Prerequisites
 
-* Please make sure that Node.js (version >= 16) is installed on your operating system.
-* You should have the NestJS CLI globally installed. Open up a terminal and run `npm i -g @nestjs/cli`.
-* This project uses a MySQL Database. I recommend having the latest version of it. If you don't have any MySQL Server installed, you can either follow the link below or choose your own server.
+
+- Please make sure that Node.js (version >= 16) is installed on your operating system.
+- You should have the NestJS CLI globally installed. Open up a terminal and run `npm i -g @nestjs/cli`.
+- This project uses a MySQL Database. I recommend having the latest version of it. If you don't have any MySQL Server installed, you can either follow the link below or choose your own server.
+
 
 #### Source link to install Node.js : https://nodejs.org/en/learn/getting-started/how-to-install-nodejs
 #### Source link to install MySQL : https://dev.mysql.com/downloads/installer/

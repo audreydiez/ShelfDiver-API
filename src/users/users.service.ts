@@ -6,12 +6,14 @@ import { UpdateUserDto } from './dto/update-user.dto'
 import { Users } from './users.entity'
 import * as bcrypt from 'bcrypt'
 import { randomString } from '../helpers'
+import { ConfigService } from '@nestjs/config'
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(Users)
     private usersRepository: Repository<Users>,
+    private readonly configService: ConfigService,
   ) {}
 
   // Finds all users in database.
@@ -32,8 +34,18 @@ export class UsersService {
         HttpStatus.NOT_FOUND,
       )
     }
-
-    return userById
+    // Mapping only the names of the users
+    const { created_by, updated_by, ...rest } = userById
+    const result = {
+      ...rest,
+      created_by: created_by
+        ? { firstname: created_by.firstname, lastname: created_by.lastname }
+        : null,
+      updated_by: updated_by
+        ? { firstname: updated_by.firstname, lastname: updated_by.lastname }
+        : null,
+    }
+    return result as Users
   }
 
   // Creates a new user.
@@ -85,7 +97,6 @@ export class UsersService {
     const userToDelete = await this.usersRepository.findOne({
       where: { id },
     })
-    await this.usersRepository.delete(id)
     if (!userToDelete) {
       throw new HttpException(
         'No such user found in Database',
@@ -98,6 +109,7 @@ export class UsersService {
         HttpStatus.FORBIDDEN,
       )
     }
+    await this.usersRepository.delete(id)
   }
 
   // Creates a default ADMIN user if there are not any users in DB.
@@ -110,7 +122,7 @@ export class UsersService {
     // If no users are stored in DB, creates one using a placeholder email and a randomized password.
     if (!count) {
       const defaultAdmin = {
-        email: 'admin@mail.com',
+        email: this.configService.get('DEFAULT_ADMIN_MAIL'),
         password: randomString(16),
         role: 'ADMIN',
         firstname: 'John',
