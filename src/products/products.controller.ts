@@ -24,7 +24,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer'
 import { extname, join } from 'path'
-import { promises as fs, mkdirSync, rmSync, unlinkSync } from 'fs'
+import { promises as fs, mkdirSync, rmSync, unlinkSync, renameSync } from 'fs'
 import { tmpdir } from 'os'
 
 @Controller('products')
@@ -91,13 +91,17 @@ export class ProductsController {
       createProductDto.image = file.filename
       const product = await this.productsService.create(createProductDto)
 
+      const finalDestinationDir = join(process.cwd(), 'uploads', 'images')
       const finalDestination = join(
         process.cwd(),
         'uploads',
         'images',
         file.filename,
       )
-      await fs.rename(tempFilePath, finalDestination)
+      mkdirSync(finalDestinationDir, { recursive: true })
+
+      // Move the file to the final destination
+      renameSync(tempFilePath, finalDestination)
 
       return product
     } catch (error) {
